@@ -22,7 +22,7 @@ const doctorSchema = new mongoose.Schema(
       required: true,
     },
 
-    spaciality: {
+    speciality: {
       type: String,
       required: true,
     },
