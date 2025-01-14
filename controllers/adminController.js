@@ -30,27 +30,33 @@ const addDoctor = async (req, res) => {
       !experience ||
       !about ||
       !fees ||
-      !address ||
-      !available
+      !address
     ) {
-      return res.status(400).json({ error: "All fields are required." });
+      return res.status(400).json({success:"false", error: "All fields are required." });
     }
 
     // Check for image file
     if (!imageFile) {
-      return res.status(400).json({ error: "Image file is required." });
+      return res
+        .status(400)
+        .json({ success: "false", error: "Image file is required." });
     }
 
     // Validate email
     if (!validator.isEmail(email)) {
-      return res.status(400).json({ error: "Invalid email." });
+      return res
+        .status(400)
+        .json({ success: "false", error: "Invalid email." });
     }
 
     // Validate password length
     if (password.length < 6) {
       return res
         .status(400)
-        .json({ error: "Password must be at least 6 characters long." });
+        .json({
+          success: "false",
+          error: "Password must be at least 6 characters long.",
+        });
     }
 
     // Hash password
@@ -95,15 +101,17 @@ const addDoctor = async (req, res) => {
     const newDoctor = new doctorModel(doctorData);
     await newDoctor.save();
 
-    // Success response
+
     res
       .status(200)
       .json({ success: "true", message: "Doctor added successfully." });
   } catch (err) {
     console.error("Error:", err);
-    res.status(500).json({ error: "Internal Server Error." });
+    res.status(500).json({ success: "false", error: "Internal Server Error." });
   }
 };
+
+
 
 //api for admin login
 
@@ -119,6 +127,9 @@ const loginAdmin = async (req, res) => {
       let token;
       token = jwt.sign(email + password, process.env.JWT_SECRET);
       return res.status(200).json({ success:"true",token });
+
+      // res.cookie("atoken", token)
+
     } else {
       return res.status(400).json({success:"false", error: "Invalid credentials." });
     }
@@ -126,7 +137,7 @@ const loginAdmin = async (req, res) => {
 
   } catch (err) {
     console.error("Error:", err);
-    res.status(500).json({ error: "Internal Server Error." });
+    res.status(500).json({ success: "false", error: "Internal Server Error." });
   }
 };
 
